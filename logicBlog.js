@@ -3,13 +3,13 @@
     const postPage = document.querySelector('.comments-container');
 
     if (postNav) {
-        createPostsNav();
-        createPostsList();
+        await createPostsNav();
+        await createPostsList();
     }
 
     if (postPage) {
-        createPostPage();
-        createPostComment();
+        await createPostPage();
+        await createPostComment();
     }
 }());
 
@@ -20,7 +20,7 @@ async function getPostsData() {
     const response = await fetch(`https://gorest.co.in/public-api/posts?page=${postPage === null ? 1 : postPage}`);
     const result = await response.json();
 
-    console.log(result)
+    console.log(result);
     return {
         posts: result.data,
         pagination: result.meta.pagination,
@@ -29,14 +29,15 @@ async function getPostsData() {
 
 async function createPostsList() {
 
-    const posts = await getPostsData();
+    const postsApp = await getPostsData();
     const postsList = document.querySelector('.posts-list');
     let postItem = '';
 
-    for (let i = 0; i < posts.posts.length; i++) {
+    for (let post = 0; post < postsApp.posts.length; post++) {
         postItem += `
         <li>
-            <a class="post-list-link" href="post.html?id=${posts.posts[i].id}">Сатья${i + 1}</a>
+            <a class="post-list-link link-primary" href="post.html?id=${postsApp.posts[post].id}">Статья ${post + 1}</a>
+            <p>Заголовок: ${postsApp.posts[post].title}</p>
         </li>`;
 
         postsList.innerHTML = postItem;
@@ -65,10 +66,10 @@ async function createPostsNav(){
     const postsNav = document.querySelector('.nav-list');
     let postNav = '';
 
-    for (let i = 1; i <= pagination.pagination.pages; i++) {
+    for (let page = 1; page <= pagination.pagination.pages; page++) {
         postNav += `
         <li>
-            <a class="nav-link" href="index.html?page=${i}">Страница ${i}</a>
+            <a class="nav-link" href="index.html?page=${page}">Страница ${page}</a>
         </li>`;
         postsNav.innerHTML = postNav;
     }
